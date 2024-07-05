@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        .header {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .timer {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .button {
+            background-color: #3e3e3e;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            font-size: 12px;
+            color: white;
+            cursor: pointer;
+        }
+        .button img {
+            width: 24px;
+            height: 24px;
+        }
+        .end-call {
+            background-color: red;
+            width: 80px;
+            height: 80px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Westpack Intelligence</div>
+        <div class="timer" id="timer">00:00</div>
+        <div class="buttons">
+            <div class="button">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/mute.png" alt="Mute">
+                <div>mute</div>
+            </div>
+            <div class="button">
+                <img src="https://img.icons8.com/?size=100&id=59819&format=png&color=ffffff" alt="Keypad">
+                <div>keypad</div>
+            </div>
+            <div class="button">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/speaker.png" alt="Speaker">
+                <div>speaker</div>
+            </div>
+            <div class="button" id="addCallButton">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/plus-math.png" alt="Add Call">
+                <div>add call</div>
+            </div>
+            <div class="button">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/facetime.png" alt="FaceTime">
+                <div>FaceTime</div>
+            </div>
+            <div class="button">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/contacts.png" alt="Contacts">
+                <div>contacts</div>
+            </div>
+        </div>
+        <div class="button end-call" onclick="location.href='/'">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
+        </div>
+    </div>
+
+    <script>
+        let seconds = 0;
+        let minutes = 0;
+        const timerElement = document.getElementById('timer');
+
+        function updateTimer() {
+            seconds++;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+            }
+
+            let secondsString = seconds < 10 ? '0' + seconds : seconds;
+            let minutesString = minutes < 10 ? '0' + minutes : minutes;
+
+            timerElement.textContent = minutesString + ':' + secondsString;
+        }
+
+        setInterval(updateTimer, 1000);
+
+        async function recordAndSendAudio() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            const audioChunks = [];
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+                const formData = new FormData();
+                formData.append("audio", audioBlob, "recording.wav");
+
+                try {
+                    const response = await fetch("/call", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const responseAudioBlob = await response.blob();
+                        const audioUrl = URL.createObjectURL(responseAudioBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.play();
+                    } else {
+                        console.error("Failed to call the API");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            };
+
+            mediaRecorder.start();
+
+            setTimeout(() => {
+                mediaRecorder.stop();
+                stream.getTracks().forEach(track => track.stop());
+            }, 5000); // Record for 5 seconds
+        }
+
+        document.getElementById("addCallButton").addEventListener("click", recordAndSendAudio);
+    </script>
+</body>
+</html>

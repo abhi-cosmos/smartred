@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Westpac Contact Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background-color: #ff0000;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .help-method {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .help-method:hover {
+            background-color: #f0f0f0;
+        }
+        .help-method img {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .bottom-nav img {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Westpac</h1>
+    </div>
+
+    <div class="content">
+        <h2>Contact Us</h2>
+        <p>Need Help? Use one of our two help methods below</p>
+        <div class="help-method" onclick="location.href='phone'">
+            <img src="/static/images/phone_icon.jpeg" alt="AI Helper Icon">
+            <div>
+                <h3>AI Helper</h3>
+                <p>Our AI Helper can support you with any basic enquiries you may have</p>
+            </div>
+        </div>
+        <div class="help-method">
+            <div>
+                <h3>About the AI</h3>
+                <p>Our AI will be able to answer any queries you may have that would not require investiagtion from a real person. From basic inquires such as how to use the app to more complex queries about your own accounts, our AI will be able to answer these questions and completely remove the wait time that comes with calling real people. Our AI will also be able to inform you on future payments based of your payment history. If the AI is unable to answer a question, it will direct you to the proper division so that you can get more personalised help from an actual employee.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <img src="/static/images/home_icon.jpeg" alt="Home">
+        <img src="/static/images/cards_icon.jpeg" alt="Cards">
+        <img src="/static/images/money_icon.jpeg" alt="Money">
+        <img src="/static/images/products_icon.jpeg" alt="Products">
+        <img src="/static/images/profile_icon.jpeg" alt="Profile">
+    </div>
+
+</body>
+</html>
